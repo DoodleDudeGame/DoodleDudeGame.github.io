@@ -541,6 +541,63 @@ p { margin: 0 0 1em; }
   }
 }
 
+/* ---------- email gate ---------- */
+
+.email-gate {
+  display: flex;
+  justify-content: center;
+}
+
+.email-gate-card {
+  width: 100%;
+  max-width: 480px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  background: var(--paper);
+  text-align: center;
+}
+
+.email-gate-card h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.3em;
+}
+
+.email-gate-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.email-gate-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  border: var(--stroke) solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.email-gate-form input:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.email-gate-msg {
+  margin-top: 16px;
+  color: var(--orange);
+  font-weight: 500;
+}
+
+@media (max-width: 520px) {
+  .email-gate-form {
+    flex-direction: column;
+  }
+}
+
 /* ---------- footer ---------- */
 
 .site-footer {
