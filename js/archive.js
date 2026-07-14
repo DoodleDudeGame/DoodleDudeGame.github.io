@@ -56,7 +56,7 @@ async function renderArchive() {
   try {
     const winners = await fetchWinners();
     if (!winners.length) {
-      grid.outerHTML = `<div class="archive-empty"><p>No winners posted yet — check back Wednesday.</p></div>`;
+      grid.outerHTML = `<div class="archive-empty"><p>No winners posted yet. Check back Wednesday.</p></div>`;
       return;
     }
     grid.innerHTML = winners.map(winnerCardHTML).join("");

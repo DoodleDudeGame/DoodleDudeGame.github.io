@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Your Doodle — DoodleDude</title>
+  <title>Submit Your Doodle | DoodleDude</title>
   <meta name="description" content="Upload a photo of your DoodleDude drawing for today's prompt.">
-  <link rel="icon" href="images/DoodleDudeLogo.png">
+  <link rel="icon" href="Images/DoodleDudeLogo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -20,12 +20,14 @@
   <header class="site-header">
     <div class="wrap">
       <a class="brand" href="index.html">
-        <img src="images/DoodleDudeLogo.png" alt="DoodleDude logo">
+        <img src="Images/DoodleDudeLogo.png" alt="DoodleDude logo">
       </a>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="archive.html">Archive</a>
+        <a href="today.html">Today</a>
+        <a href="submissions.html">This Month</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="submit.html" aria-current="page">Submit</a>
         <a class="btn btn-primary" href="subscribe.html">Subscribe</a>
@@ -53,18 +55,35 @@
         </div>
       </div>
 
-      <div class="subscribe-panel" id="submit-panel" hidden>
-        <div class="subscribe-form-wrap">
-          <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSfuTjoNd3NvVHNzJilX7qMHYjPlyp0z7QbsC27XWOLdr2SdsQ/viewform?embedded=true"
-            title="Doodle Dude submission form">
-            Loading form…
-          </iframe>
+      <div class="subscribe-panel gated-content" id="submit-panel" hidden>
+        <div class="native-form-wrap">
+          <form id="submit-form" class="native-form">
+            <label>
+              Your name or handle
+              <input type="text" name="name" id="submit-name" placeholder="Doodle Dude" required autocomplete="name">
+            </label>
+            <label>
+              Which prompt is this for?
+              <select name="prompt" id="submit-prompt" required>
+                <option value="">Loading prompts…</option>
+              </select>
+            </label>
+            <label>
+              Upload your sketch
+              <input type="file" name="photo" id="submit-photo" accept="image/*" required>
+            </label>
+            <label>
+              Caption <span class="optional">(optional)</span>
+              <textarea name="caption" id="submit-caption" rows="3" placeholder="Anything you want the caption to say?"></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Submit my doodle</button>
+            <p class="form-msg" id="submit-form-msg" hidden></p>
+          </form>
         </div>
         <div class="subscribe-side">
           <h3>Before you upload</h3>
           <ul>
-            <li>We ask that you keep it to one submission per prompt — thanks for helping us keep things fair.</li>
+            <li>We ask that you keep it to one submission per prompt. Thanks for helping us keep things fair.</li>
             <li>Winners get posted here first, then on Instagram a few hours later.</li>
             <li>Not subscribed yet? <a href="subscribe.html">Sign up here</a> to get the next prompt.</li>
           </ul>
@@ -78,12 +97,14 @@
   <footer class="site-footer">
     <div class="wrap">
       <a class="footer-brand" href="index.html">
-        <img src="images/DoodleDudeLogo.png" alt="DoodleDude">
+        <img src="Images/DoodleDudeLogo.png" alt="DoodleDude">
         Doodle Dude
       </a>
       <nav class="footer-links">
         <a href="index.html">Home</a>
         <a href="archive.html">Archive</a>
+        <a href="today.html">Today</a>
+        <a href="submissions.html">This Month</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="submit.html">Submit</a>
         <a href="subscribe.html">Subscribe</a>
@@ -94,6 +115,7 @@
 
   <script src="js/nav.js"></script>
   <script src="js/email-gate.js"></script>
+  <script src="js/submit-form.js"></script>
 </body>
 
 </html>

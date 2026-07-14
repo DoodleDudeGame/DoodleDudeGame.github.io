@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subscribe — DoodleDude</title>
+  <title>Subscribe | DoodleDude</title>
   <meta name="description" content="Join DoodleDude and get a new drawing prompt by text every day.">
-  <link rel="icon" href="images/DoodleDudeLogo.png">
+  <link rel="icon" href="Images/DoodleDudeLogo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -20,12 +20,14 @@
   <header class="site-header">
     <div class="wrap">
       <a class="brand" href="index.html">
-        <img src="images/DoodleDudeLogo.png" alt="DoodleDude logo">
+        <img src="Images/DoodleDudeLogo.png" alt="DoodleDude logo">
       </a>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="archive.html">Archive</a>
+        <a href="today.html">Today</a>
+        <a href="submissions.html">This Month</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="submit.html">Submit</a>
         <a class="btn btn-primary" href="subscribe.html" aria-current="page">Subscribe</a>
@@ -42,12 +44,58 @@
       </div>
 
       <div class="subscribe-panel">
-        <div class="subscribe-form-wrap">
-          <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSdO5NsbwfoOwlwFUGaHHi0XVAzTQuiPWkgCwMS46rvj2V_avA/viewform?embedded=true"
-            title="DoodleDude subscribe form">
-            Loading form…
-          </iframe>
+        <div class="native-form-wrap">
+          <form id="subscribe-form" class="native-form">
+            <label>
+              First name
+              <input type="text" name="firstName" id="sub-first-name" required autocomplete="given-name">
+            </label>
+            <label>
+              Last name
+              <input type="text" name="lastName" id="sub-last-name" required autocomplete="family-name">
+            </label>
+            <label>
+              Username or Instagram handle
+              <input type="text" name="username" id="sub-username" required autocomplete="off">
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" id="sub-email" required autocomplete="email">
+            </label>
+            <label>
+              Phone number <span class="optional">(for text prompts)</span>
+              <input type="tel" name="phone" id="sub-phone" autocomplete="tel">
+            </label>
+            <label>
+              Phone carrier
+              <select name="carrier" id="sub-carrier">
+                <option value="">Choose…</option>
+                <option>Verizon</option>
+                <option>GoogleFi</option>
+                <option>AT&amp;T</option>
+                <option>T-Mobile</option>
+                <option>Mint Mobile</option>
+                <option>Cricket</option>
+                <option>Boost</option>
+              </select>
+            </label>
+            <label>
+              How should we send your daily prompt?
+              <select name="deliveryMethod" id="sub-delivery" required>
+                <option value="">Choose…</option>
+                <option>Email</option>
+                <option>Text</option>
+                <option>Both</option>
+                <option>None</option>
+              </select>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="tagInstagram" id="sub-tag-ig">
+              Okay to tag your username on Instagram when you win?
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Join Dudes That Doodle</button>
+            <p class="form-msg" id="subscribe-form-msg" hidden></p>
+          </form>
         </div>
         <div class="subscribe-side">
           <h3>What you're signing up for</h3>
@@ -55,7 +103,7 @@
             <li>One text a day with that day's drawing prompt.</li>
             <li>A link to submit the previous day's doodle.</li>
             <li>A text if you win, once your submission's been ranked.</li>
-            <li>No spam beyond that — just the daily loop.</li>
+            <li>No spam beyond that. Just the daily loop.</li>
           </ul>
           <p>Prefer to sign up a different way? Reach out on <a href="https://instagram.com/doodledudegame"
               target="_blank" rel="noopener">Instagram</a>.</p>
@@ -67,12 +115,14 @@
   <footer class="site-footer">
     <div class="wrap">
       <a class="footer-brand" href="index.html">
-        <img src="images/DoodleDudeLogo.png" alt="Doodle Dude">
+        <img src="Images/DoodleDudeLogo.png" alt="Doodle Dude">
         Doodle Dude Game
       </a>
       <nav class="footer-links">
         <a href="index.html">Home</a>
         <a href="archive.html">Archive</a>
+        <a href="today.html">Today</a>
+        <a href="submissions.html">This Month</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="submit.html">Submit</a>
         <a href="subscribe.html">Subscribe</a>
@@ -82,6 +132,7 @@
   </footer>
 
   <script src="js/nav.js"></script>
+  <script src="js/subscribe-form.js"></script>
 </body>
 
 </html>

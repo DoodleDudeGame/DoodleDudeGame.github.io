@@ -1,13 +1,16 @@
-// Gates the submission form behind an email check against the subscriber list.
+// Gates page content behind an email check against the subscriber list.
 // Verification happens server-side via a Google Apps Script web app so the
 // actual subscriber list is never exposed in this public site's code.
+//
+// Reusable across any page: put the gate markup in #email-gate and the
+// content to protect in an element with class "gated-content".
 const EMAIL_VERIFY_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxbpUth_jG8YQnb_fj5qpb4-PWrzX3qMhBuFyeaopOt2gwxbwvYVazdaMblH46KKjmG/exec";
 
 const SESSION_KEY = "ddg_verified_email";
 
 document.addEventListener("DOMContentLoaded", () => {
   const gate = document.getElementById("email-gate");
-  const panel = document.getElementById("submit-panel");
+  const panel = document.querySelector(".gated-content");
   const form = document.getElementById("email-gate-form");
   const input = document.getElementById("email-gate-input");
   const msg = document.getElementById("email-gate-msg");
@@ -17,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function unlock() {
     gate.hidden = true;
     panel.hidden = false;
+    panel.dispatchEvent(new CustomEvent("ddg:unlocked"));
   }
 
   function showMessage(text) {
@@ -40,9 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.hidden = true;
 
     try {
+      // NOTE: text/plain avoids a CORS preflight (OPTIONS) request, which
+      // Apps Script web apps don't handle it. The endpoint still parses this
+      // as JSON on the server side.
       const response = await fetch(EMAIL_VERIFY_WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ email }),
       });
       const data = await response.json();
