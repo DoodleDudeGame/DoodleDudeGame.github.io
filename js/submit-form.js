@@ -8,29 +8,27 @@ const SUBMIT_WEBHOOK_URL = ""; // e.g. "https://script.google.com/macros/s/XXXXX
 
 const VERIFIED_EMAIL_KEY = "ddg_verified_email";
 
-function todayISO() {
-  const d = new Date();
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
-// Populates the "which prompt is this for?" dropdown from data/prompts.json
-// (recent prompts, newest first) so subscribers can still pick yesterday's
-// prompt if they're submitting a day late. Defaults to today's.
+// Populates the "which prompt is this for?" dropdown the same way the real
+// Google Form's dropdown works: yesterday's prompt and today's prompt, live
+// from submit-handler.gs's doGet (which reads the 2026_historicalpromptlist
+// sheet). Defaults to today's.
 async function loadPromptOptions(selectEl) {
-  const iso = todayISO();
+  if (!SUBMIT_WEBHOOK_URL) {
+    selectEl.innerHTML = `<option value="">Couldn't load prompts, type it in below</option>`;
+    return;
+  }
   try {
-    const res = await fetch("data/prompts.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("no prompts file");
-    const prompts = await res.json();
-    if (!prompts.length) throw new Error("empty prompts file");
+    const res = await fetch(SUBMIT_WEBHOOK_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error("prompt fetch failed");
+    const { yesterday, today } = await res.json();
+    if (!yesterday?.prompt && !today?.prompt) throw new Error("no prompts returned");
 
-    selectEl.innerHTML = prompts
-      .map((p) => `<option value="${p.prompt}" data-date="${p.date}">${p.prompt}${p.date === iso ? " (today)" : ""}</option>`)
+    const options = [yesterday, today].filter((p) => p && p.prompt);
+    selectEl.innerHTML = options
+      .map((p) => `<option value="${p.prompt}" data-date="${p.date}">${p.prompt}${p === today ? " (today)" : ""}</option>`)
       .join("");
 
-    const todayOption = [...selectEl.options].find((o) => o.dataset.date === iso);
-    if (todayOption) selectEl.value = todayOption.value;
+    if (today?.prompt) selectEl.value = today.prompt;
   } catch (err) {
     selectEl.innerHTML = `<option value="">Couldn't load prompts, type it in below</option>`;
   }
