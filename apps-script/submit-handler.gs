@@ -102,6 +102,14 @@ function doPost(e) {
       return jsonResponse({ success: false, error: "No photo attached." });
     }
 
+    // Safety net - the site's file picker and client-side compression should
+    // already prevent this, but reject anything else (e.g. TIFF) that
+    // somehow reaches this endpoint directly.
+    const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
+    if (!ACCEPTED_TYPES.includes(data.file.mimeType)) {
+      return jsonResponse({ success: false, error: "Only PNG or JPG photos are accepted." });
+    }
+
     const bytes = Utilities.base64Decode(data.file.data);
     if (bytes.length > MAX_FILE_BYTES) {
       return jsonResponse({ success: false, error: "Photo is too large." });

@@ -34,12 +34,55 @@ async function loadPromptOptions(selectEl) {
   }
 }
 
+const ACCEPTED_TYPES = ["image/png", "image/jpeg"];
+const MAX_LONG_EDGE = 1600; // resize target, matches scripts/import_drive_submissions.py
+const JPEG_QUALITY = 0.85;
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result.split(",")[1]); // strip data: prefix
     reader.onerror = reject;
     reader.readAsDataURL(file);
+  });
+}
+
+// Resizes/re-encodes the chosen image in-browser before upload, so large
+// photos (multi-MB phone camera shots) don't get sent - or saved to
+// Drive - at full size. Rejects anything the browser can't actually decode
+// as an image (e.g. TIFF has no browser decoder, so this naturally catches
+// it even if a file somehow got past the <input accept> filter).
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+
+      const longEdge = Math.max(img.width, img.height);
+      const scale = Math.min(1, MAX_LONG_EDGE / longEdge);
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return reject(new Error("Couldn't process that image."));
+          resolve(blob);
+        },
+        "image/jpeg",
+        JPEG_QUALITY
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Couldn't read that image - is it actually a PNG or JPG?"));
+    };
+    img.src = objectUrl;
   });
 }
 
@@ -69,6 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      msg.textContent = "Please upload a PNG or JPG - other formats like TIFF or HEIC aren't supported.";
+      msg.hidden = false;
+      return;
+    }
+
     if (!SUBMIT_WEBHOOK_URL) {
       msg.textContent = "Submissions aren't connected yet. Check back soon while we finish wiring this up.";
       msg.hidden = false;
@@ -79,7 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.textContent = "Submitting…";
 
     try {
-      const base64 = await fileToBase64(file);
+      const compressed = await compressImage(file);
+      const base64 = await fileToBase64(compressed);
       // text/plain avoids a CORS preflight; Apps Script parses the JSON body regardless.
       const response = await fetch(SUBMIT_WEBHOOK_URL, {
         method: "POST",
@@ -90,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
           caption,
           file: {
             data: base64,
-            mimeType: file.type,
+            mimeType: "image/jpeg",
             filename: file.name,
           },
         }),
@@ -107,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         msg.hidden = false;
       }
     } catch (err) {
-      msg.textContent = "Something went wrong submitting that. Try again in a moment.";
+      msg.textContent = err?.message || "Something went wrong submitting that. Try again in a moment.";
       msg.hidden = false;
     } finally {
       submitBtn.disabled = false;
