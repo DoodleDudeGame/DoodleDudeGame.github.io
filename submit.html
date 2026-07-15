@@ -59,18 +59,14 @@
         <div class="native-form-wrap">
           <form id="submit-form" class="native-form">
             <label>
-              Your name or handle
-              <input type="text" name="name" id="submit-name" placeholder="Doodle Dude" required autocomplete="name">
+              Upload your sketch
+              <input type="file" name="photo" id="submit-photo" accept="image/*" required>
             </label>
             <label>
-              Which prompt is this for?
+              Select Prompt
               <select name="prompt" id="submit-prompt" required>
                 <option value="">Loading prompts…</option>
               </select>
-            </label>
-            <label>
-              Upload your sketch
-              <input type="file" name="photo" id="submit-photo" accept="image/*" required>
             </label>
             <label>
               Caption <span class="optional">(optional)</span>

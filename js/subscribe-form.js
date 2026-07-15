@@ -18,10 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.hidden = true;
 
     const payload = {
+      email: document.getElementById("sub-email").value.trim(),
+      username: document.getElementById("sub-username").value.trim(),
       firstName: document.getElementById("sub-first-name").value.trim(),
       lastName: document.getElementById("sub-last-name").value.trim(),
-      username: document.getElementById("sub-username").value.trim(),
-      email: document.getElementById("sub-email").value.trim(),
       phone: document.getElementById("sub-phone").value.trim(),
       carrier: document.getElementById("sub-carrier").value,
       deliveryMethod: document.getElementById("sub-delivery").value,

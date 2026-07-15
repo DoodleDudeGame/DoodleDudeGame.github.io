@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const submitBtn = form.querySelector("button[type=submit]");
     const email = sessionStorage.getItem(VERIFIED_EMAIL_KEY) || "";
-    const name = document.getElementById("submit-name").value.trim();
     const prompt = promptInput.value.trim();
     const caption = document.getElementById("submit-caption").value.trim();
     const fileInput = document.getElementById("submit-photo");
@@ -89,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
           email,
-          name,
           prompt,
           caption,
           file: {

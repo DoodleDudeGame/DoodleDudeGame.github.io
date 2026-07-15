@@ -1,10 +1,10 @@
 /**
  * DoodleDude: submission form backend.
  *
- * Receives {email, name, prompt, caption, file:{data, mimeType, filename}},
- * saves the photo to a Drive folder, and logs a row to a Sheet. This sheet +
- * folder pair is exactly what Workato should watch to pull new submissions
- * into the site.
+ * Receives {email, prompt, caption, file:{data, mimeType, filename}}, saves
+ * the photo to a Drive folder, and logs a row to a Sheet. This sheet + folder
+ * pair is exactly what Workato should watch to pull new submissions into the
+ * site.
  *
  * SETUP:
  * 1. Create a Google Drive folder for incoming submission photos, copy its
@@ -18,9 +18,16 @@
  */
 
 const DRIVE_FOLDER_ID = "PASTE_YOUR_DRIVE_FOLDER_ID_HERE";
-const SHEET_NAME = "Submissions";
+// Must match the existing tab name in the "Doodle Dude (Responses)" spreadsheet exactly.
+const SHEET_NAME = "Form Responses 1";
 const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB safety cap
 
+// Column order matches the sheet's real header row exactly:
+// Timestamp | Email Address | Upload your sketch | Select Prompt | Caption |
+// FileName | UserName | Approve | Reason | Relevance Score | Relevance Reason |
+// skillScore | skillReason
+// Everything from FileName onward is populated later by the review/AI
+// pipeline, not by this handler, so those columns are left blank here.
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
@@ -36,33 +43,32 @@ function doPost(e) {
 
     const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
     const dateStr = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd");
-    const safeName = (data.name || "anonymous").replace(/[^a-zA-Z0-9_-]/g, "_");
-    const filename = `${dateStr}_${safeName}_${new Date().getTime()}`;
+    const safeEmail = (data.email || "anonymous").replace(/[^a-zA-Z0-9_-]/g, "_");
+    const filename = `${dateStr}_${safeEmail}_${new Date().getTime()}`;
 
     const blob = Utilities.newBlob(bytes, data.file.mimeType || "image/jpeg", filename);
     const file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME)
-      || SpreadsheetApp.getActiveSpreadsheet().insertSheet(SHEET_NAME);
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Timestamp", "Date", "Email", "Name", "Prompt", "Caption",
-        "Drive File ID", "Drive File URL", "Status",
-      ]);
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      return jsonResponse({ success: false, error: `Sheet tab "${SHEET_NAME}" not found.` });
     }
 
     sheet.appendRow([
       new Date(),
-      dateStr,
       (data.email || "").trim().toLowerCase(),
-      data.name || "",
+      file.getUrl(),
       data.prompt || "",
       data.caption || "",
-      file.getId(),
-      file.getUrl(),
-      "pending", // Workato / manual review flips this to "approved" / "winner" etc.
+      "", // FileName - filled in by review pipeline
+      "", // UserName - filled in by review pipeline
+      "", // Approve - filled in by review pipeline
+      "", // Reason
+      "", // Relevance Score
+      "", // Relevance Reason
+      "", // skillScore
+      "", // skillReason
     ]);
 
     return jsonResponse({ success: true });

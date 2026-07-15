@@ -47,27 +47,27 @@
         <div class="native-form-wrap">
           <form id="subscribe-form" class="native-form">
             <label>
-              First name
-              <input type="text" name="firstName" id="sub-first-name" required autocomplete="given-name">
-            </label>
-            <label>
-              Last name
-              <input type="text" name="lastName" id="sub-last-name" required autocomplete="family-name">
-            </label>
-            <label>
-              Username or Instagram handle
-              <input type="text" name="username" id="sub-username" required autocomplete="off">
-            </label>
-            <label>
-              Email
+              Email Address
               <input type="email" name="email" id="sub-email" required autocomplete="email">
             </label>
             <label>
-              Phone number <span class="optional">(for text prompts)</span>
+              Username or Instagram Handle
+              <input type="text" name="username" id="sub-username" required autocomplete="off">
+            </label>
+            <label>
+              First Name
+              <input type="text" name="firstName" id="sub-first-name" required autocomplete="given-name">
+            </label>
+            <label>
+              Last Name
+              <input type="text" name="lastName" id="sub-last-name" required autocomplete="family-name">
+            </label>
+            <label>
+              Phone Number <span class="optional">(for text prompts)</span>
               <input type="tel" name="phone" id="sub-phone" autocomplete="tel">
             </label>
             <label>
-              Phone carrier
+              Phone Carrier
               <select name="carrier" id="sub-carrier">
                 <option value="">Choose…</option>
                 <option>Verizon</option>
@@ -80,7 +80,7 @@
               </select>
             </label>
             <label>
-              How should we send your daily prompt?
+              How would you like to get your daily prompt?
               <select name="deliveryMethod" id="sub-delivery" required>
                 <option value="">Choose…</option>
                 <option>Email</option>
@@ -91,7 +91,7 @@
             </label>
             <label class="checkbox-label">
               <input type="checkbox" name="tagInstagram" id="sub-tag-ig">
-              Okay to tag your username on Instagram when you win?
+              Can we tag your username on Instagram?
             </label>
             <button type="submit" class="btn btn-primary btn-block">Join Dudes That Doodle</button>
             <p class="form-msg" id="subscribe-form-msg" hidden></p>

@@ -17,27 +17,27 @@
  * as the subscriber source for anything that needs the subscriber list.
  */
 
-const SHEET_NAME = "Subscribers";
+// Must match the existing tab name in the DoodleDudeSubscribers spreadsheet exactly.
+const SHEET_NAME = "Form Responses 1";
 
+// Column order matches the sheet's real header row exactly:
+// Timestamp | Email Address | Username or Instagram Handle | First Name |
+// Last Name | Phone Number | Phone Carrier |
+// How would you like to get your daily prompt? | Can we tag your username on Instagram?
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME)
-      || SpreadsheetApp.getActiveSpreadsheet().insertSheet(SHEET_NAME);
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Timestamp", "First Name", "Last Name", "Username", "Email",
-        "Phone", "Carrier", "Delivery Method", "Tag on Instagram",
-      ]);
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      return jsonResponse({ success: false, error: `Sheet tab "${SHEET_NAME}" not found.` });
     }
 
     sheet.appendRow([
       new Date(),
+      (data.email || "").trim().toLowerCase(),
+      data.username || "",
       data.firstName || "",
       data.lastName || "",
-      data.username || "",
-      (data.email || "").trim().toLowerCase(),
       data.phone || "",
       data.carrier || "",
       data.deliveryMethod || "",
