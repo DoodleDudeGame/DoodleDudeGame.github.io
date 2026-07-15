@@ -21,10 +21,21 @@ async function initTodayTicker() {
     const parts = [tickerItemHTML("Today's Prompt", today.prompt)];
     if (today.skill) parts.push(tickerItemHTML("Skill", today.skill));
     if (today.twist) parts.push(tickerItemHTML("Twist", today.twist));
+    const setHTML = parts.join("");
 
-    // Duplicated so the CSS animation (translateX -50%) loops seamlessly.
-    track.innerHTML = parts.join("") + parts.join("");
+    // The CSS animation slides the track by -50%, so it needs to consist of
+    // two identical, back-to-back halves for the loop to be seamless - and
+    // each half needs to be at least as wide as the ticker itself, or short
+    // content (e.g. just one item) ends up sitting in a corner instead of
+    // spanning/scrolling across the full bar. Keep doubling until that holds.
+    let repeated = setHTML;
+    track.innerHTML = repeated;
     ticker.hidden = false;
+    while (track.scrollWidth < ticker.clientWidth && repeated.length < 20000) {
+      repeated += setHTML;
+      track.innerHTML = repeated;
+    }
+    track.innerHTML = repeated + repeated;
   } catch (err) {
     // leave hidden - no ticker is better than a broken/empty one
   }
