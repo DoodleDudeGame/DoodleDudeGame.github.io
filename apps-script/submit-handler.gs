@@ -92,8 +92,8 @@ function doGet(e) {
 // Timestamp | Email Address | Upload your sketch | Select Prompt | Caption |
 // FileName | UserName | Approve | Reason | Relevance Score | Relevance Reason |
 // skillScore | skillReason
-// Everything from FileName onward is populated later by the review/AI
-// pipeline, not by this handler, so those columns are left blank here.
+// FileName and UserName are set directly below. Approve onward is still
+// populated later by the review/AI pipeline, so those stay blank here.
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
@@ -128,8 +128,9 @@ function doPost(e) {
       file.getUrl(),
       data.prompt || "",
       data.caption || "",
-      "", // FileName - filled in by review pipeline
-      "", // UserName - filled in by review pipeline
+      file.getName(), // FileName - the native form bypasses the real Form's
+                       // onFormSubmit trigger, so this is set directly here
+      username, // UserName - looked up above by email, same reason as FileName
       "", // Approve - filled in by review pipeline
       "", // Reason
       "", // Relevance Score
