@@ -119,6 +119,59 @@ p { margin: 0 0 1em; }
   justify-content: center;
 }
 
+/* ---------- ticker ---------- */
+
+.ticker {
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: var(--stroke) solid var(--ink);
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 10px 0;
+  animation: ticker-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+.ticker-track .ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  padding: 0 1.5rem;
+}
+
+.ticker-track .ticker-label {
+  color: var(--orange);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+
+.ticker-track .ticker-sep {
+  color: var(--warm-gray);
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+    overflow-x: auto;
+  }
+}
+
 /* ---------- header ---------- */
 
 .site-header {

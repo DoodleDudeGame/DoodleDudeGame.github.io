@@ -54,8 +54,10 @@ function lookupUsername(email) {
 const PROMPT_LIST_SHEET_ID = "1YaVDbKVr5piz-COjXCyBozLVwkq0Kzlj6NnFFUGPinU";
 const PROMPT_LIST_TAB = "2026_historicalpromptlist";
 
-// GET handler: returns { yesterdayPrompt, todayPrompt } for the native
-// form's prompt dropdown to fetch instead of a static JSON file.
+// GET handler: returns { yesterday: {date, prompt}, today: {date, prompt,
+// skill, twist} } for the native form's prompt dropdown and the homepage
+// ticker to fetch instead of a static JSON file. Column layout in the
+// prompt-list sheet: A=date, B=prompt, C=skill, D=twist.
 function doGet(e) {
   const sheet = SpreadsheetApp.openById(PROMPT_LIST_SHEET_ID).getSheetByName(PROMPT_LIST_TAB);
   const lastRow = sheet.getLastRow();
@@ -68,23 +70,29 @@ function doGet(e) {
   const yesterdayString = formatDate(yesterday);
 
   let yesterdayPrompt = "";
+  let todaySkill = "";
+  let todayTwist = "";
   let todayPrompt = "";
 
   if (lastRow >= 2) {
-    const data = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
+    const data = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
     for (let i = 0; i < data.length; i++) {
       const row = data[i];
       if (!row[0]) continue;
       const cellDateStr = formatDate(new Date(row[0]));
-      if (cellDateStr === yesterdayString) yesterdayPrompt = row[1];
-      else if (cellDateStr === todayString) todayPrompt = row[1];
-      if (yesterdayPrompt && todayPrompt) break;
+      if (cellDateStr === yesterdayString) {
+        yesterdayPrompt = row[1];
+      } else if (cellDateStr === todayString) {
+        todayPrompt = row[1];
+        todaySkill = row[2] || "";
+        todayTwist = row[3] || "";
+      }
     }
   }
 
   return jsonResponse({
     yesterday: { date: yesterdayString, prompt: yesterdayPrompt },
-    today: { date: todayString, prompt: todayPrompt },
+    today: { date: todayString, prompt: todayPrompt, skill: todaySkill, twist: todayTwist },
   });
 }
 
