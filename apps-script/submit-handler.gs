@@ -17,8 +17,8 @@
  * 5. Copy the deployment URL into SUBMIT_WEBHOOK_URL in js/submit-form.js.
  */
 
-const DRIVE_FOLDER_ID = "PASTE_YOUR_DRIVE_FOLDER_ID_HERE";
-const RESPONSES_SHEET_ID = "1ViPAGliTqSihEZ5LL6LaYKbXfA5R29YU"; // "Doodle Dude (Responses)"
+const DRIVE_FOLDER_ID = "1ZWdJ34FdPb5wh9Fft5E8wYUota0A0uaSoKm88OKVp5ToiRTgJFLFKGWhBgigppUyf03RInUg";
+const RESPONSES_SHEET_ID = "1lzi9OJQXuWO1CEO8rS5zS_P_tKMHH4-XoQM72C5TNzo"; // "Doodle Dude (Responses)"
 // Must match the existing tab name in that spreadsheet exactly.
 const SHEET_NAME = "Form Responses 2";
 const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB safety cap
