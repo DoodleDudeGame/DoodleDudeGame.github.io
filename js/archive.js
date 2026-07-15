@@ -80,7 +80,25 @@ async function renderRecentWinner() {
   }
 }
 
+// Swaps the hero image (normally the logo) for the latest winner's photo,
+// once there is one. Leaves the logo in place until data/winners.json has
+// at least one entry.
+async function renderHeroWinnerPhoto() {
+  const img = document.getElementById("hero-art-img");
+  if (!img) return;
+  try {
+    const winners = await fetchWinners();
+    if (!winners.length) return;
+    const latest = winners[0];
+    img.src = latest.image_url;
+    img.alt = `Winning drawing by ${latest.winner_name}`;
+  } catch (err) {
+    // leave the logo as-is
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderArchive();
   renderRecentWinner();
+  renderHeroWinnerPhoto();
 });
