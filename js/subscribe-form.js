@@ -4,7 +4,7 @@
 // (see apps-script/subscribe-handler.gs for the code to deploy). Until this
 // URL is filled in, the form will show a friendly "not connected yet" message
 // instead of silently failing.
-const SUBSCRIBE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzLBKD93juxKELi_j9u0PuKE5m4Zvi95vhAkmWp2TP-pS0_LuS7SBbDv9Q50p3_qbYn/exec";
+const SUBSCRIBE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw0l5-RuYnNV554S5Ix9GVIFcAS6YzPy6NH1U-nM8qeVMinWVXVpScJiXIyNSWLme-qjg/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("subscribe-form");
