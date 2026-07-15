@@ -4,7 +4,7 @@
 // (see apps-script/submit-handler.gs for the code to deploy). Until this URL
 // is filled in, the form will show a friendly "not connected yet" message
 // instead of silently failing.
-const SUBMIT_WEBHOOK_URL = ""; // e.g. "https://script.google.com/macros/s/XXXXXXXX/exec"
+const SUBMIT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwdpxGfqRl6DfxqFvztKIufRd6a4jdWb8kWiJalDXfb42YH7yaNugskkWwljmIdjgL3/exec";
 
 const VERIFIED_EMAIL_KEY = "ddg_verified_email";
 
