@@ -17,7 +17,8 @@
  * as the subscriber source for anything that needs the subscriber list.
  */
 
-// Must match the existing tab name in the DoodleDudeSubscribers spreadsheet exactly.
+const SUBSCRIBERS_SHEET_ID = "131TBaB_HfXCPZRGw_qvXPiZQ_QTyDsM0doyHVrUPU30"; // DoodleDudeSubscribers
+// Must match the existing tab name in that spreadsheet exactly.
 const SHEET_NAME = "Form Responses 1";
 
 // Column order matches the sheet's real header row exactly:
@@ -27,7 +28,7 @@ const SHEET_NAME = "Form Responses 1";
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    const sheet = SpreadsheetApp.openById(SUBSCRIBERS_SHEET_ID).getSheetByName(SHEET_NAME);
     if (!sheet) {
       return jsonResponse({ success: false, error: `Sheet tab "${SHEET_NAME}" not found.` });
     }

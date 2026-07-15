@@ -18,8 +18,9 @@
  */
 
 const DRIVE_FOLDER_ID = "PASTE_YOUR_DRIVE_FOLDER_ID_HERE";
-// Must match the existing tab name in the "Doodle Dude (Responses)" spreadsheet exactly.
-const SHEET_NAME = "Form Responses 1";
+const RESPONSES_SHEET_ID = "1ViPAGliTqSihEZ5LL6LaYKbXfA5R29YU"; // "Doodle Dude (Responses)"
+// Must match the existing tab name in that spreadsheet exactly.
+const SHEET_NAME = "Form Responses 2";
 const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB safety cap
 
 // Same source the live Google Form's "Select Prompt" dropdown pulls from
@@ -90,7 +91,7 @@ function doPost(e) {
     const file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    const sheet = SpreadsheetApp.openById(RESPONSES_SHEET_ID).getSheetByName(SHEET_NAME);
     if (!sheet) {
       return jsonResponse({ success: false, error: `Sheet tab "${SHEET_NAME}" not found.` });
     }
