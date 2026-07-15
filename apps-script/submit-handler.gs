@@ -21,7 +21,32 @@ const DRIVE_FOLDER_ID = "1ZWdJ34FdPb5wh9Fft5E8wYUota0A0uaSoKm88OKVp5ToiRTgJFLFKG
 const RESPONSES_SHEET_ID = "1lzi9OJQXuWO1CEO8rS5zS_P_tKMHH4-XoQM72C5TNzo"; // "Doodle Dude (Responses)"
 // Must match the existing tab name in that spreadsheet exactly.
 const SHEET_NAME = "Form Responses 2";
-const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB safety cap
+const MAX_FILE_BYTES = 100 * 1024 * 1024; // 100MB safety cap - note Apps Script's own
+// request-size ceiling may reject very large base64 payloads before this check runs.
+
+// Same subscriber sheet the email-gate check reads, used here to look up the
+// submitter's Username/Instagram handle by email for filenames.
+const SUBSCRIBERS_SHEET_ID = "131TBaB_HfXCPZRGw_qvXPiZQ_QTyDsM0doyHVrUPU30"; // DoodleDudeSubscribers
+const SUBSCRIBERS_TAB = "Form Responses 1";
+
+// Looks up the Username or Instagram Handle for a given email from the
+// subscriber sheet. Returns "" if not found.
+function lookupUsername(email) {
+  if (!email) return "";
+  const sheet = SpreadsheetApp.openById(SUBSCRIBERS_SHEET_ID).getSheetByName(SUBSCRIBERS_TAB);
+  const data = sheet.getDataRange().getValues();
+  const header = data[0];
+  const emailCol = header.indexOf("Email Address");
+  const usernameCol = header.indexOf("Username or Instagram Handle");
+  if (emailCol === -1 || usernameCol === -1) return "";
+
+  const target = email.trim().toLowerCase();
+  for (let i = 1; i < data.length; i++) {
+    const rowEmail = String(data[i][emailCol] || "").trim().toLowerCase();
+    if (rowEmail === target) return String(data[i][usernameCol] || "");
+  }
+  return "";
+}
 
 // Same source the live Google Form's "Select Prompt" dropdown pulls from
 // (see the existing updateFormDropdown() script) - kept in sync here so the
@@ -83,9 +108,10 @@ function doPost(e) {
     }
 
     const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
-    const dateStr = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd");
-    const safeEmail = (data.email || "anonymous").replace(/[^a-zA-Z0-9_-]/g, "_");
-    const filename = `${dateStr}_${safeEmail}_${new Date().getTime()}`;
+    const username = lookupUsername(data.email) || "anonymous";
+    const safePrompt = (data.prompt || "untitled").replace(/[^a-zA-Z0-9 _-]/g, "").trim();
+    const safeUsername = username.replace(/[^a-zA-Z0-9 _-]/g, "").trim();
+    const filename = `${safePrompt}_${safeUsername}`;
 
     const blob = Utilities.newBlob(bytes, data.file.mimeType || "image/jpeg", filename);
     const file = folder.createFile(blob);
