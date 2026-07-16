@@ -67,13 +67,23 @@ function ddgGroupByDay(entries) {
   return [...byDay.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1));
 }
 
+function ddgEscapeAttr(str) {
+  return String(str == null ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 function ddgSubmissionCardHTML(entry, isWinner) {
+  const entryData = ddgEscapeAttr(JSON.stringify(entry));
   return `
-    <div class="submission-card${isWinner ? " is-winner" : ""}">
+    <div class="submission-card${isWinner ? " is-winner" : ""}" data-entry="${entryData}">
       ${isWinner ? `<span class="winner-ribbon">Winner</span>` : ""}
-      <div class="photo">
+      <button type="button" class="photo" aria-label="View larger doodle by ${ddgEscapeAttr(entry.submitter_name)}">
         <img src="${entry.image_url}" alt="Doodle by ${entry.submitter_name}" loading="lazy">
-      </div>
+      </button>
       <div class="info">
         <span class="name">${entry.submitter_name}</span>
         ${entry.caption ? `<p class="caption">${entry.caption}</p>` : ""}
@@ -81,6 +91,92 @@ function ddgSubmissionCardHTML(entry, isWinner) {
     </div>
   `;
 }
+
+// ---------- lightbox (click a thumbnail to see it larger) ----------
+
+let ddgLightboxEls = null;
+
+function ddgEnsureLightbox() {
+  if (ddgLightboxEls) return ddgLightboxEls;
+
+  const overlay = document.createElement("div");
+  overlay.className = "ddg-lightbox";
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="ddg-lightbox-backdrop" data-ddg-close></div>
+    <div class="ddg-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Doodle detail">
+      <button type="button" class="ddg-lightbox-close" data-ddg-close aria-label="Close">&times;</button>
+      <div class="ddg-lightbox-photo">
+        <img alt="">
+      </div>
+      <div class="ddg-lightbox-info">
+        <span class="ddg-lightbox-date"></span>
+        <span class="ddg-lightbox-prompt"></span>
+        <span class="ddg-lightbox-name"></span>
+        <p class="ddg-lightbox-caption"></p>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const els = {
+    overlay,
+    img: overlay.querySelector(".ddg-lightbox-photo img"),
+    date: overlay.querySelector(".ddg-lightbox-date"),
+    prompt: overlay.querySelector(".ddg-lightbox-prompt"),
+    name: overlay.querySelector(".ddg-lightbox-name"),
+    caption: overlay.querySelector(".ddg-lightbox-caption"),
+    trigger: null,
+  };
+
+  function close() {
+    overlay.hidden = true;
+    document.body.classList.remove("ddg-lightbox-open");
+    if (els.trigger) els.trigger.focus();
+  }
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target.closest("[data-ddg-close]")) close();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !overlay.hidden) close();
+  });
+
+  els.close = close;
+  ddgLightboxEls = els;
+  return els;
+}
+
+function ddgOpenLightbox(entry, trigger) {
+  const els = ddgEnsureLightbox();
+  els.trigger = trigger || null;
+  els.img.src = entry.image_url;
+  els.img.alt = `Doodle by ${entry.submitter_name}`;
+  els.date.textContent = entry.date ? ddgFormatDate(entry.date) : "";
+  els.date.hidden = !entry.date;
+  els.prompt.textContent = entry.prompt || "";
+  els.prompt.hidden = !entry.prompt;
+  els.name.textContent = entry.submitter_name || "";
+  els.caption.textContent = entry.caption || "";
+  els.caption.hidden = !entry.caption;
+  els.overlay.hidden = false;
+  document.body.classList.add("ddg-lightbox-open");
+  els.overlay.querySelector(".ddg-lightbox-close").focus();
+}
+
+document.addEventListener("click", (e) => {
+  const photoBtn = e.target.closest(".submission-card .photo");
+  if (!photoBtn) return;
+  const card = photoBtn.closest(".submission-card");
+  if (!card || !card.dataset.entry) return;
+  try {
+    const entry = JSON.parse(card.dataset.entry);
+    ddgOpenLightbox(entry, photoBtn);
+  } catch (err) {
+    // ignore malformed entry data
+  }
+});
 
 // winnerKeys is optional (a Set from ddgLoadWinnerKeys). When present, the
 // day's winner (if any) is sorted first and gets the gold filigree treatment.
