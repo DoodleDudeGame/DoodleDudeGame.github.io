@@ -14,7 +14,7 @@ it client-side). Each entry:
   "date": "2026-07-14",
   "prompt": "Twisted Wooden Chair",
   "winner_name": "Alex",
-  "image_url": "Images/winners/2026-07-14.png",
+  "image_url": "Images/submissions/2026-07/2026-07-14-alex.png",
   "caption": "Gave it googly-eye legs.",
   "instagram_url": "https://instagram.com/p/xxxxx"
 }
@@ -33,8 +33,7 @@ submission that month (not just winners). Each entry:
   "prompt": "Twisted Wooden Chair",
   "submitter_name": "Alex",
   "image_url": "Images/submissions/2026-07/2026-07-14-alex.png",
-  "caption": "Gave it googly-eye legs.",
-  "submitted_at": "2026-07-14T15:02:00Z"
+  "caption": "Gave it googly-eye legs."
 }
 ```
 
