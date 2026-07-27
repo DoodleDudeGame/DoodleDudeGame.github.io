@@ -4,114 +4,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Your Doodle | DoodleDude</title>
-  <meta name="description" content="Upload a photo of your DoodleDude drawing for today's prompt.">
-  <link rel="icon" href="Images/DoodleDudeLogo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=Caveat:wght@600&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <title>Doodle Twist has moved</title>
 </head>
 
 <body>
+  <main>
+    <h1>We've moved!</h1>
+    <p>Doodle Twist now lives at <a href="https://doodletwist.com">doodletwist.com/submit.html</a></p>
+  </main>
 
-  <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="index.html">
-        <img src="Images/DoodleDudeLogo.png" alt="DoodleDude logo">
-      </a>
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="archive.html">Archive</a>
-        <a href="today.html">Today</a>
-        <a href="submissions.html">This Month</a>
-        <a href="how-it-works.html">How It Works</a>
-        <a href="submit.html" aria-current="page">Submit</a>
-        <a class="btn btn-primary" href="subscribe.html">Subscribe</a>
-      </nav>
-    </div>
-  </header>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #ffffff;
+      color: #1a1a1a;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.55;
+      text-align: center;
+    }
 
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <h1>Submit your doodle</h1>
-        <p>Drew something for today's prompt? Upload a photo below. Every submission gets checked for rules and
-          relevance before it goes anywhere public.</p>
-      </div>
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      margin: 0 0 0.4em;
+    }
 
-      <div class="email-gate" id="email-gate">
-        <div class="email-gate-card">
-          <h2>Verify your email</h2>
-          <p>Submissions are for Dudes That Doodle subscribers. Enter the email you signed up with to continue.</p>
-          <form id="email-gate-form" class="email-gate-form">
-            <input type="email" id="email-gate-input" placeholder="you@email.com" required autocomplete="email">
-            <button type="submit" class="btn btn-primary">Continue</button>
-          </form>
-          <p class="email-gate-msg" id="email-gate-msg" hidden></p>
-        </div>
-      </div>
-
-      <div class="subscribe-panel gated-content" id="submit-panel" hidden>
-        <div class="native-form-wrap">
-          <form id="submit-form" class="native-form">
-            <label>
-              Upload your sketch <span class="optional">(PNG or JPG)</span>
-              <input type="file" name="photo" id="submit-photo" accept="image/png,image/jpeg" required>
-            </label>
-            <label>
-              Select Prompt
-              <select name="prompt" id="submit-prompt" required>
-                <option value="">Loading prompts…</option>
-              </select>
-            </label>
-            <label>
-              Caption <span class="optional">(optional)</span>
-              <textarea name="caption" id="submit-caption" rows="3" placeholder="Anything you want the caption to say?"></textarea>
-            </label>
-            <button type="submit" class="btn btn-primary btn-block">Submit my doodle</button>
-            <p class="form-msg" id="submit-form-msg" hidden></p>
-          </form>
-        </div>
-        <div class="subscribe-side">
-          <h3>Before you upload</h3>
-          <ul>
-            <li>We ask that you keep it to one submission per prompt. Thanks for helping us keep things fair.</li>
-            <li>Winners get posted here first, then on Instagram a few hours later.</li>
-            <li>Not subscribed yet? <a href="subscribe.html">Sign up here</a> to get the next prompt.</li>
-          </ul>
-          <p>Trouble with the form? Reach out on <a href="https://instagram.com/doodledudegame" target="_blank"
-              rel="noopener">Instagram</a>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="wrap">
-      <a class="footer-brand" href="index.html">
-        <img src="Images/DoodleDudeLogo.png" alt="DoodleDude">
-        Doodle Dude
-      </a>
-      <nav class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="archive.html">Archive</a>
-        <a href="today.html">Today</a>
-        <a href="submissions.html">This Month</a>
-        <a href="how-it-works.html">How It Works</a>
-        <a href="submit.html">Submit</a>
-        <a href="subscribe.html">Subscribe</a>
-      </nav>
-      <p class="footer-note">&copy; 2026 DoodleDude. Draw a little better than yesterday.</p>
-    </div>
-  </footer>
-
-  <script src="js/nav.js"></script>
-  <script src="js/email-gate.js"></script>
-  <script src="js/submit-form.js"></script>
+    a {
+      color: #0088ff;
+      font-weight: 600;
+    }
+  </style>
 </body>
 
 </html>
